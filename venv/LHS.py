@@ -1,5 +1,5 @@
 #coding=utf-8
-#from http://blog.csdn.net/xiaosebi1111/article/details/48653675
+#demo from http://blog.csdn.net/xiaosebi1111/article/details/48653675
 import numpy as np
 #解决pycharm报错方法 https://www.linuxidc.com/Linux/2018-03/151117.htm
 import matplotlib as mpl
