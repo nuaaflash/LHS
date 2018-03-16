@@ -7,45 +7,54 @@ mpl.use('TkAgg')
 from matplotlib.ticker import MultipleLocator, FuncFormatter
 #http://blog.csdn.net/luminganan/article/details/51322234 安装方法
 import matplotlib.pyplot as pl
-
-def LHSample( D,bounds,N):
+class LHSample:
+    '拉丁超立方算法类'
+    D = 0
+    bounds = [[0,1],[0,1]]
+    N = 0
     '''
     :param D:参数个数
     :param bounds:参数对应范围（list）
     :param N:拉丁超立方层数
     :return:样本数据
     '''
+    def __init__(self,D,bounds,N):
 
-    result = np.empty([N, D])
-    temp = np.empty([N])
-    d = 1.0 / N
+        self.D = D
+        self.bounds = bounds
+        self.N = N
 
-    for i in range(D):
+    def getSample(self):
+        result = np.empty([N, D])
+        temp = np.empty([N])
+        d = 1.0 / N
 
-        for j in range(N):
-            temp[j] = np.random.uniform(
-                low=j * d, high=(j + 1) * d, size = 1)[0]
+        for i in range(D):
 
-        np.random.shuffle(temp)
+            for j in range(N):
+                temp[j] = np.random.uniform(
+                    low=j * d, high=(j + 1) * d, size = 1)[0]
 
-        for j in range(N):
-            result[j, i] = temp[j]
+            np.random.shuffle(temp)
 
-    #对样本数据进行拉伸
-    b = np.array(bounds)
-    lower_bounds = b[:,0]
-    upper_bounds = b[:,1]
-    if np.any(lower_bounds > upper_bounds):
-        print '范围出错'
-        return None
+            for j in range(N):
+                result[j, i] = temp[j]
 
-    #   sample * (upper_bound - lower_bound) + lower_bound
-    np.add(np.multiply(result,
-                       (upper_bounds - lower_bounds),
-                       out=result),
-           lower_bounds,
-           out=result)
-    return result
+        #对样本数据进行拉伸
+        b = np.array(bounds)
+        lower_bounds = b[:,0]
+        upper_bounds = b[:,1]
+        if np.any(lower_bounds > upper_bounds):
+            print '范围出错'
+            return None
+
+        #   sample * (upper_bound - lower_bound) + lower_bound
+        np.add(np.multiply(result,
+                           (upper_bounds - lower_bounds),
+                           out=result),
+               lower_bounds,
+               out=result)
+        return result
 
 if __name__ =='__main__':
     D = 2
@@ -59,7 +68,8 @@ if __name__ =='__main__':
     pl.grid()
     ax.xaxis.set_major_locator( MultipleLocator(xs) )
     ax.yaxis.set_major_locator(MultipleLocator(ys))
-    samples = LHSample(D,bounds,N)
+    lhs = LHSample(D,bounds,N)
+    samples = lhs.getSample()
     XY = np.array(samples)
     X = XY[:,0]
     Y = XY[:,1]
